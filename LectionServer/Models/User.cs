@@ -1,9 +1,9 @@
 ﻿namespace LectionServer.Models;
 
-public record Book
+public record User
 {
     public required Guid Id { get; init; }
-    public required Guid UserId { get; set; }
-    public required string Author { get; set; }
     public required string Name { get; set; }
+    public required string Email { get; set; }
+    public required string Password { get; set; }
 }

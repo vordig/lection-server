@@ -1,4 +1,5 @@
 ﻿using LectionServer.Contracts;
+using LectionServer.Endpoints.Data;
 using LectionServer.Models;
 using LectionServer.Services;
 
@@ -64,45 +65,45 @@ public static class BookEndpoints
             .WithOpenApi();
     }
     
-    private static IResult GetBooks(BookService bookService, CancellationToken cancellationToken)
+    private static IResult GetBooks(BookService bookService, RequestData requestData, CancellationToken cancellationToken)
     {
-        var result = bookService.GetBooks();
+        var result = bookService.GetBooks(requestData.UserId);
         return Results.Json(result);
     }
     
-    private static IResult GetBook(BookService bookService, Guid id, CancellationToken cancellationToken)
+    private static IResult GetBook(BookService bookService, RequestData requestData, Guid id, CancellationToken cancellationToken)
     {
-        var result = bookService.GetBook(id);
+        var result = bookService.GetBook(id, requestData.UserId);
         return result is null ? Results.NotFound() : Results.Json(result);
     }
     
-    private static IResult AddBook(BookService bookService, BookRequest request, CancellationToken cancellationToken)
+    private static IResult AddBook(BookService bookService, RequestData requestData, BookRequest request, CancellationToken cancellationToken)
     {
-        var result = bookService.AddBook(request);
+        var result = bookService.AddBook(request, requestData.UserId);
         return Results.Created($"api/books/{result.Id}", result);
     }
     
-    private static IResult UpdateBook(BookService bookService, Guid id, BookRequest request, CancellationToken cancellationToken)
+    private static IResult UpdateBook(BookService bookService, RequestData requestData, Guid id, BookRequest request, CancellationToken cancellationToken)
     {
-        var result = bookService.UpdateBook(id, request);
+        var result = bookService.UpdateBook(id, request, requestData.UserId);
         return result is null ? Results.NotFound() : Results.Json(result);
     }
     
-    private static IResult DeleteBook(BookService bookService, Guid id, CancellationToken cancellationToken)
+    private static IResult DeleteBook(BookService bookService, RequestData requestData, Guid id, CancellationToken cancellationToken)
     {
-        bookService.DeleteBook(id);
+        bookService.DeleteBook(id, requestData.UserId);
         return Results.Ok();
     }
     
-    private static IResult GenerateBooks(BookService bookService, int count, CancellationToken cancellationToken)
+    private static IResult GenerateBooks(BookService bookService, RequestData requestData, int count, CancellationToken cancellationToken)
     {
-        bookService.GenerateBooks(count);
+        bookService.GenerateBooks(count, requestData.UserId);
         return Results.Ok();
     }
     
-    private static IResult ClearBooks(BookService bookService, CancellationToken cancellationToken)
+    private static IResult ClearBooks(BookService bookService, RequestData requestData, CancellationToken cancellationToken)
     {
-        bookService.ClearBooks();
+        bookService.ClearBooks(requestData.UserId);
         return Results.Ok();
     }
 }
